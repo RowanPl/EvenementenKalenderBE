@@ -2,7 +2,6 @@ package com.example.evenementenkalenderbe.Model;
 
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.HashSet;
 import java.util.Set;
 

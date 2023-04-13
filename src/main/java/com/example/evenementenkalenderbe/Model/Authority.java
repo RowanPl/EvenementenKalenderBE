@@ -1,7 +1,5 @@
 package com.example.evenementenkalenderbe.Model;
-
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 
 @Entity
