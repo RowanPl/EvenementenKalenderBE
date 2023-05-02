@@ -1,4 +1,4 @@
-package com.example.evenementenkalenderbe.Model;
+package com.example.evenementenkalenderbe.model;
 
 import java.io.Serializable;
 

@@ -1,42 +1,26 @@
-package com.example.evenementenkalenderbe.Model;
-
-import jakarta.persistence.*;
-import org.jetbrains.annotations.NotNull;
+package com.example.evenementenkalenderbe.dto;
 
 
-import java.sql.Time;
+import com.example.evenementenkalenderbe.model.FileUploadResponse;
+import jakarta.persistence.Lob;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-@Entity
-@Table(name = "Event")
-public class Evenement {
-
-    @Id
-    @GeneratedValue
+public class EventDto {
+    public String nameOfEvent;
+    public List<Date> dates = new ArrayList<>();
+    public String linkToEvent;
+    public String eventType;
+    public String time;
+    @Lob
+    public String moreInformation;
+    @Lob
+    public FileUploadResponse file;
+    public String location;
+    public String eventCreator;
     private Long Id;
-
-    @NotNull
-    private String nameOfEvent;
-    @NotNull
-    private Date date;
-    @NotNull
-    private String linkToEvent;
-    @NotNull
-    private String eventType;
-    @NotNull
-    private Time time;
-    @NotNull
-    private String moreInformation;
-    @NotNull
-    private String fileUpload;
-    @NotNull
-    private String location;
-
-    @ManyToOne
-    private EventCreator eventCreator;
-
-    @ManyToOne
-    private Calender calender;
 
 
     public Long getId() {
@@ -55,12 +39,12 @@ public class Evenement {
         this.nameOfEvent = nameOfEvent;
     }
 
-    public Date getDate() {
-        return date;
+    public List<Date> getDates() {
+        return dates;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDates(List<Date> dates) {
+        this.dates = dates;
     }
 
     public String getLinkToEvent() {
@@ -79,11 +63,11 @@ public class Evenement {
         this.eventType = eventType;
     }
 
-    public Time getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -95,12 +79,12 @@ public class Evenement {
         this.moreInformation = moreInformation;
     }
 
-    public String getFileUpload() {
-        return fileUpload;
+    public FileUploadResponse getFileUpload() {
+        return file;
     }
 
-    public void setFileUpload(String fileUpload) {
-        this.fileUpload = fileUpload;
+    public void setFileUpload(FileUploadResponse fileUpload) {
+        this.file = fileUpload;
     }
 
     public String getLocation() {
@@ -111,11 +95,12 @@ public class Evenement {
         this.location = location;
     }
 
-    public EventCreator getEventCreator() {
+    public String getEventCreator() {
         return eventCreator;
     }
 
-    public void setEventCreator(EventCreator eventCreator) {
+    public void setEventCreator(String eventCreator) {
         this.eventCreator = eventCreator;
     }
+
 }

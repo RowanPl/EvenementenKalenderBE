@@ -1,5 +1,7 @@
-package com.example.evenementenkalenderbe.Model;
+package com.example.evenementenkalenderbe.model;
+
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 @Entity
@@ -15,7 +17,9 @@ public class Authority implements Serializable {
     @Column(nullable = false)
     private String authority;
 
-    public Authority() {}
+    public Authority() {
+    }
+
     public Authority(String username, String authority) {
         this.username = username;
         this.authority = authority;
@@ -24,12 +28,15 @@ public class Authority implements Serializable {
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String getAuthority() {
         return authority;
     }
+
     public void setAuthority(String authority) {
         this.authority = authority;
     }
