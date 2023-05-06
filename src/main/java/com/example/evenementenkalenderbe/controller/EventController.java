@@ -1,7 +1,7 @@
 package com.example.evenementenkalenderbe.controller;
 
+import com.example.evenementenkalenderbe.Exeptions.EventNotFoundException;
 import com.example.evenementenkalenderbe.dto.EventDto;
-import com.example.evenementenkalenderbe.model.Event;
 import com.example.evenementenkalenderbe.model.FileUploadResponse;
 import com.example.evenementenkalenderbe.service.EventService;
 import org.springframework.http.ResponseEntity;
@@ -34,41 +34,44 @@ public class EventController {
         return ResponseEntity.created(location).body(eventId);
     }
 
-    //get events
+
     @GetMapping
     public ResponseEntity<Object> getEvents() {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }
 
-    //get event by id
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getEventById(@PathVariable Long id) {
         return ResponseEntity.ok().body(eventService.getEventById(id));
     }
 
-    //get event by category
+
     @GetMapping("/category/{category}")
     public ResponseEntity<Object> getEventByCategory(@PathVariable String category) {
 
         return ResponseEntity.ok().body(eventService.getAllEventsByCategory(category));
     }
 
-    // delete event
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteEvent(@PathVariable Long id) {
+
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 
-    //update event
+
     @PutMapping("/{id}")
     public ResponseEntity<EventDto> updateEvent(@PathVariable Long id, @RequestBody EventDto dto) {
+
         EventDto updatedEventDto = eventService.updateEvent(id, dto);
         return ResponseEntity.ok(updatedEventDto);
     }
 
     @PostMapping("/{id}/upload")
     public ResponseEntity<Object> uploadPhoto(@PathVariable Long id, @RequestBody MultipartFile file) {
+
         FileUploadResponse photo = photoController.singelFileUpload(file);
 
         eventService.assignPhotoToEvent(id, photo.getFileName());
