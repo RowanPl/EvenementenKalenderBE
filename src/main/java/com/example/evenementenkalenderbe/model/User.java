@@ -1,11 +1,14 @@
 package com.example.evenementenkalenderbe.model;
 
 import jakarta.persistence.*;
-import org.jetbrains.annotations.NotNull;
 
+
+import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Table(name = "users")
@@ -16,8 +19,8 @@ public class User {
     @NotNull
     private String username;
 
-    @Column(nullable = false, length = 255)
-    @NotNull
+    @Column(nullable = false)
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
 

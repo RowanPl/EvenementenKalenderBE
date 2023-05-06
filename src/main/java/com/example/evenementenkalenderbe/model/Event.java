@@ -25,6 +25,7 @@ public class Event {
     private String linkToEvent;
     private String eventType;
     private String time;
+    @Column(name = "moreInformation", length = 10000)
     private String moreInformation;
     private String location;
 

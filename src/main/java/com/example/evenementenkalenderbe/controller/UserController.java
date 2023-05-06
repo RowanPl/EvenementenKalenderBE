@@ -3,11 +3,13 @@ package com.example.evenementenkalenderbe.controller;
 import com.example.evenementenkalenderbe.dto.UserDto;
 import com.example.evenementenkalenderbe.repository.UserRepository;
 import com.example.evenementenkalenderbe.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -45,20 +47,30 @@ public class UserController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
-        String newUsername = userService.createUser(dto);
-        if (dto.creator) {
-            userService.addAuthority(newUsername, "CREATOR");
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto dto) {
+
+        if (dto.getPassword().length() < 8) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long");
         } else {
-            userService.addAuthority(newUsername, "USER");
+            String newUsername = userService.createUser(dto);
+            if (dto.creator) {
+                userService.addAuthority(newUsername, "CREATOR");
+            } else {
+                userService.addAuthority(newUsername, "USER");
+            }
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}").buildAndExpand(newUsername).toUri();
+            return ResponseEntity.created(location).build();
         }
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}").buildAndExpand(newUsername).toUri();
-        return ResponseEntity.created(location).build();
     }
 
     @PutMapping(value = "/{username}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable String username, @RequestBody UserDto dto) {
-        userService.updateUser(username, dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> updateUser(@Valid @PathVariable String username, @RequestBody UserDto dto) {
+        if (dto.getPassword().length() < 8) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long");
+        } else {
+            userService.updateUser(username, dto);
+            return ResponseEntity.ok().build();
+        }
+
     }
 }

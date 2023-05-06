@@ -47,7 +47,7 @@ public class PhotoService {
         // Next line is for Windows users
         Path filePath = Paths.get(fileStoragePath + "\\" + fileName);
 
-        // Next line is for Mac users
+        // Next line is for Mac users or Linux users
         // Path filePath = Paths.get(fileStoragePath + "/" + fileName);
 
         try {

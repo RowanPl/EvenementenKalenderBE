@@ -14,9 +14,9 @@ public class EventDto {
     public String linkToEvent;
     public String eventType;
     public String time;
-    @Lob
+
     public String moreInformation;
-    @Lob
+
     public FileUploadResponse file;
     public String location;
     public String eventCreator;
