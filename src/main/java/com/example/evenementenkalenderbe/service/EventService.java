@@ -24,16 +24,14 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-
     private final FileUploadRepository fileUploadRepository;
-
 
     public EventService(EventRepository eventRepository, UserRepository userRepository, FileUploadRepository fileUploadRepository) {
         this.eventRepository = eventRepository;
-
         this.userRepository = userRepository;
         this.fileUploadRepository = fileUploadRepository;
     }
+
 
     public static EventDto fromEvent(Event event) {
 
@@ -52,21 +50,21 @@ public class EventService {
         return dto;
     }
 
-    //Check for admin rights
+
     private boolean isAdmin(String username) {
         User user = userRepository.findByUsername(username);
         return user.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
     }
 
-    //get all events
     public List<Event> getAllEvents() {
         EventDto dto = new EventDto();
         List<Event> events = (List<Event>) eventRepository.findAll();
         return events;
     }
 
-    //get event by id
+
     public EventDto getEventById(Long id) {
+        if (id == null) throw new EventNotFoundException(id);
         EventDto dto = new EventDto();
         Optional<Event> event = eventRepository.findById(id);
         if (event.isPresent()) {
@@ -77,15 +75,14 @@ public class EventService {
         return dto;
     }
 
-    //create event
+
     public EventDto createEvent(EventDto dto) {
         String username = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             username = authentication.getName();
         } else {
-            // Handle the case where the user is not authenticated
-            // You could throw an exception or return an error response, for example
+            throw new AccessDeniedExcpetion( "You need to be logged in to create an event");
         }
 
         // Create and save the event using the authenticated username
@@ -108,7 +105,7 @@ public class EventService {
     }
 
 
-    //update event
+
     public EventDto updateEvent(Long id, EventDto dto) {
         Optional<Event> optionalEvent = eventRepository.findById(id);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -136,33 +133,24 @@ public class EventService {
     }
 
 
-    //delete event
+
     @Transactional
     public void deleteEvent(Long id) {
         eventRepository.deleteById(id);
     }
 
-    //get all events by user
     public List<Event> getAllEventsByUser(String CreatorName) {
         EventDto dto = new EventDto();
         List<Event> events = eventRepository.findAllByEventCreator(CreatorName);
         return events;
     }
 
-    //get all events by category
+
     public List<Event> getAllEventsByCategory(String category) {
         EventDto dto = new EventDto();
         List<Event> events = eventRepository.findAllByEventType(category);
         return events;
     }
-
-    //get all events by date
-    public List<Event> getAllEventsByDate(String date) {
-        EventDto dto = new EventDto();
-        List<Event> events = eventRepository.findAllByDates(date);
-        return events;
-    }
-
 
     public void assignPhotoToEvent(Long Id, String name) {
 
