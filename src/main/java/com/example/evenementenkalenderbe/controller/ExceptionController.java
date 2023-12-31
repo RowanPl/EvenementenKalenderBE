@@ -1,6 +1,7 @@
 package com.example.evenementenkalenderbe.controller;
 
-import com.example.evenementenkalenderbe.Exeptions.AccessDeniedExcpetion;
+import com.example.evenementenkalenderbe.Exeptions.AccessDeniedException;
+import com.example.evenementenkalenderbe.Exeptions.BadRequestException;
 import com.example.evenementenkalenderbe.Exeptions.EventNotFoundException;
 import com.example.evenementenkalenderbe.Exeptions.UserNotAuthorized;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,8 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
-    @ExceptionHandler(value = AccessDeniedExcpetion.class)
-    public ResponseEntity<Object> exception(AccessDeniedExcpetion exception) {
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<Object> exception(AccessDeniedException exception) {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(exception.getMessage());
     }
@@ -33,5 +34,10 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
     }
 
+    @ExceptionHandler(value = BadRequestException.class)
+    public ResponseEntity<Object> exception(BadRequestException exception) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
 
 }

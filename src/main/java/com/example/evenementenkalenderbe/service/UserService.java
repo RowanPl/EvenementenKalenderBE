@@ -1,9 +1,11 @@
 package com.example.evenementenkalenderbe.service;
 
+import com.example.evenementenkalenderbe.Exeptions.BadRequestException;
 import com.example.evenementenkalenderbe.dto.UserDto;
 import com.example.evenementenkalenderbe.model.Authority;
 import com.example.evenementenkalenderbe.model.User;
 import com.example.evenementenkalenderbe.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,6 @@ public class UserService {
         dto.enabled = user.isEnabled();
         dto.email = user.getEmail();
         dto.authorities = user.getAuthorities();
-        dto.creator = user.isCreator();
         dto.newsletter = user.isNewsletter();
 
         return dto;
@@ -49,21 +50,26 @@ public class UserService {
         return dto;
     }
 
-    public String createUser(UserDto userDto) {
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        User newUser = userRepository.save(toUser(userDto));
-        return newUser.getUsername();
+   public UserDto createUser(UserDto dto) {
+
+        if (dto.getPassword().length() < 8) {
+            throw new BadRequestException("Password must be at least 8 characters long");
+        } else {
+            User user = toUser(dto);
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            userRepository.save(user);
+            return dto;
+        }
     }
 
     public User toUser(UserDto userDto) {
 
-        var user = new User();
+        User user = new User();
 
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
         user.setEnabled(userDto.getEnabled());
         user.setEmail(userDto.getEmail());
-        user.setCreator(userDto.isCreator());
         user.setNewsletter(userDto.isNewsletter());
 
         return user;
@@ -100,19 +106,8 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setEnabled(dto.getEnabled());
         user.setEmail(dto.getEmail());
-        user.setCreator(dto.isCreator());
+
         user.setNewsletter(dto.isNewsletter());
-
-        removeAuthority(user.getUsername(), "CREATOR");
-        removeAuthority(user.getUsername(), "USER");
-
-        if (!user.isCreator()) {
-            removeAuthority(user.getUsername(), "CREATOR");
-            addAuthority(user.getUsername(), "USER");
-        } else {
-            addAuthority(user.getUsername(), "CREATOR");
-        }
-
         userRepository.save(user);
     }
 

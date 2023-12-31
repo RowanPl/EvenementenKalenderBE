@@ -3,6 +3,7 @@ package com.example.evenementenkalenderbe.model;
 import jakarta.persistence.*;
 
 
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 
 @Entity
+@Data
 @Table(name = "users")
 public class User {
 
@@ -34,8 +36,8 @@ public class User {
     @Column(columnDefinition = "boolean default false")
     private boolean newsletter;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean creator;
+    @ManyToOne
+    private EventCreator eventCreator;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles;
@@ -47,76 +49,14 @@ public class User {
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
-    public String getPassword() {
-        return password;
-    }
+    public User() {
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isCreator() {
-        return creator;
-    }
-
-    public void setCreator(boolean creator) {
-        this.creator = creator;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
     }
 
     public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
+        authorities.add(authority);
+        authority.setUsername(this.getUsername());
     }
-
-    public void removeAuthority(Authority authority) {
-        this.authorities.remove(authority);
-    }
-
-    public boolean isNewsletter() {
-        return newsletter;
-    }
-
-    public void setNewsletter(boolean newsletter) {
-        this.newsletter = newsletter;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
 }

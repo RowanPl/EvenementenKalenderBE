@@ -47,6 +47,8 @@ public class SpringSecurityConfig {
                 .httpBasic().disable()
                 .cors().and()
                 .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/users/**").hasAnyAuthority("ADMIN", "CREATOR")

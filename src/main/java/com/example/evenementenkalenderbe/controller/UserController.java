@@ -41,10 +41,6 @@ public class UserController {
     @GetMapping(value = "/{username}")
     public ResponseEntity<UserDto> getUser(@PathVariable String username) {
         UserDto userDto = userService.getUser(username);
-        if (userDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.ok().body(userDto);
     }
 
@@ -54,12 +50,9 @@ public class UserController {
         if (dto.getPassword().length() < 8) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long");
         } else {
-            String newUsername = userService.createUser(dto);
-            if (dto.creator) {
-                userService.addAuthority(newUsername, "CREATOR");
-            } else {
-                userService.addAuthority(newUsername, "USER");
-            }
+            UserDto userDto = userService.createUser(dto);
+            String newUsername = userDto.getUsername();
+
             URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}").buildAndExpand(newUsername).toUri();
             return ResponseEntity.created(location).build();
         }

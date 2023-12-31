@@ -1,7 +1,6 @@
 package com.example.evenementenkalenderbe.controller;
 
-import com.example.evenementenkalenderbe.Exeptions.EventNotFoundException;
-import com.example.evenementenkalenderbe.dto.EventDto;
+import com.example.evenementenkalenderbe.dto.Event.EventOutputDto;
 import com.example.evenementenkalenderbe.model.FileUploadResponse;
 import com.example.evenementenkalenderbe.service.EventService;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 
 @RestController
@@ -27,7 +27,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createEvent(@RequestBody EventDto dto) {
+    public ResponseEntity<Long> createEvent(@RequestBody EventOutputDto dto) {
         Long eventId = eventService.createEvent(dto).getId();
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(eventId).toUri();
@@ -36,7 +36,7 @@ public class EventController {
 
 
     @GetMapping
-    public ResponseEntity<Object> getEvents() {
+    public ResponseEntity<List<EventOutputDto>> getEvents() {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }
 
@@ -49,31 +49,26 @@ public class EventController {
 
     @GetMapping("/category/{category}")
     public ResponseEntity<Object> getEventByCategory(@PathVariable String category) {
-
         return ResponseEntity.ok().body(eventService.getAllEventsByCategory(category));
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteEvent(@PathVariable Long id) {
-
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventDto> updateEvent(@PathVariable Long id, @RequestBody EventDto dto) {
-
-        EventDto updatedEventDto = eventService.updateEvent(id, dto);
-        return ResponseEntity.ok(updatedEventDto);
+    public ResponseEntity<EventOutputDto> updateEvent(@PathVariable Long id, @RequestBody EventOutputDto dto) {
+        EventOutputDto updatedEventOutputDto = eventService.updateEvent(id, dto);
+        return ResponseEntity.ok(updatedEventOutputDto);
     }
 
     @PostMapping("/{id}/upload")
     public ResponseEntity<Object> uploadPhoto(@PathVariable Long id, @RequestBody MultipartFile file) {
-
         FileUploadResponse photo = photoController.singelFileUpload(file);
-
         eventService.assignPhotoToEvent(id, photo.getFileName());
         return ResponseEntity.noContent().build();
     }

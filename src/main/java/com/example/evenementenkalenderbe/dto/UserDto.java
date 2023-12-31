@@ -10,11 +10,8 @@ public class UserDto {
     public String username;
     public String password;
     public Boolean enabled;
-
     public String email;
     public Set<Authority> authorities;
-
-    public boolean creator;
     public boolean newsletter;
 
     public String getUsername() {
@@ -61,13 +58,6 @@ public class UserDto {
         this.enabled = enabled;
     }
 
-    public boolean isCreator() {
-        return creator;
-    }
-
-    public void setCreator(boolean creator) {
-        this.creator = creator;
-    }
 
     public boolean isNewsletter() {
         return newsletter;

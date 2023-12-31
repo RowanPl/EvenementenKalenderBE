@@ -1,7 +1,8 @@
 package com.example.evenementenkalenderbe.service;
 
-import com.example.evenementenkalenderbe.dto.EventDto;
+import com.example.evenementenkalenderbe.dto.Event.EventOutputDto;
 import com.example.evenementenkalenderbe.model.Event;
+import com.example.evenementenkalenderbe.model.EventType;
 import com.example.evenementenkalenderbe.model.FileUploadResponse;
 import com.example.evenementenkalenderbe.model.User;
 import com.example.evenementenkalenderbe.repository.EventRepository;
@@ -11,11 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 
@@ -40,10 +36,10 @@ class EventServiceTest {
         User u = new User();
         u.setUsername("Test Creator");
 
-        EventDto dto = new EventDto();
+        EventOutputDto dto = new EventOutputDto();
         dto.setNameOfEvent("Test Event");
         dto.setLinkToEvent("http://example.com");
-        dto.setEventType("Test Type");
+        dto.setEventType(EventType.THEATER);
         dto.setTime("12:00 PM");
         dto.setMoreInformation("Test Information");
         dto.setLocation("Test Location");
@@ -62,7 +58,7 @@ class EventServiceTest {
         when(eventRepository.findAllByEventCreator(Mockito.anyString())).thenReturn(List.of(savedEvent));
 
         // Act
-        List<Event> result = service.getAllEventsByUser("Test Creator");
+        List<EventOutputDto> result = service.getAllEventsByUser("Test Creator");
 
         // Assert
         assertEquals(1, result.size());
@@ -79,13 +75,13 @@ class EventServiceTest {
         FileUploadResponse f = new FileUploadResponse();
         f.setFileName("Test File");
 
-        EventDto dto = new EventDto();
+        EventOutputDto dto = new EventOutputDto();
         dto.setNameOfEvent("Test Event");
         dto.setLinkToEvent("http://example.com");
-        dto.setEventType("Test Type");
+        dto.setEventType(EventType.THEATER);
         dto.setTime("12:00 PM");
         dto.setMoreInformation("Test Information");
-        dto.setFileUpload(f);
+        dto.setFile(f);
         dto.setLocation("Test Location");
 
         Event savedEvent = new Event();
@@ -102,7 +98,7 @@ class EventServiceTest {
         when(eventRepository.findAllByEventType(Mockito.anyString())).thenReturn(List.of(savedEvent));
 
         // Act
-        List<Event> result = service.getAllEventsByCategory("Test Type");
+        List<EventOutputDto> result = service.getAllEventsByCategory("Test Type");
 
         //Assert
         assertEquals(1, result.size());
